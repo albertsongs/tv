@@ -2,14 +2,28 @@
  * @albertsongs (https://github.com/albertsongs)
  */
 class App {
-    constructor(apiUrl, receiverId, changeReceiverIdHandler, messageHandler) {
+    constructor(apiUrl, receiverId, multiPlayer, changeReceiverIdHandler, logger) {
         this.apiUrl = apiUrl;
         this.receiverId = receiverId;
-        this.messageHandler = messageHandler;
+        this.multiPlayer = multiPlayer;
         this.changeReceiverIdHandler = changeReceiverIdHandler;
+        this.logger = logger;
+    }
+
+    messageHandler(mess) {
+        this.logger.debug(mess);
+        const messContainer = JSON.parse(mess.body);
+        const command = JSON.parse(messContainer.message);
+        if(command === null || command === undefined) {
+            console.error("command is not defined");
+            this.logger.debug("command is not defined");
+            return;
+        }
+        this.multiPlayer.handleCommand(command);
     }
 
     connectToWebSocket() {
+        this.logger.debug("connectToWebSocket - receiverId: + " + this.receiverId);
         const receiverId = this.receiverId;
         const CHANEL_PATTERN = '/user/%userId%/private';
         let sock = new SockJS(this.apiUrl + '/ws');
@@ -22,16 +36,18 @@ class App {
                 status: "JOIN"
             };
             stompClient.send('/app/message', {}, JSON.stringify(message));
-        }, (err) => console.log(err));
+        }, (err) => this.logger.debug(err));
     }
 
     registerReceiver() {
+        this.logger.debug("registerReceiver - receiverId: + " + this.receiverId);
         this.receiverId == null
             ? this.createReceiver()
-            : this.updateReceiver()
+            : this.updateReceiver();
     }
 
     createReceiver() {
+        this.logger.debug("createReceiver - receiverId: + " + this.receiverId);
         const xHttp = new XMLHttpRequest();
         const receiverControllerPath = '/api/v1/receivers';
         const url = this.apiUrl + receiverControllerPath;
@@ -41,11 +57,12 @@ class App {
         };
         xHttp.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
-                console.log(xHttp.responseText);
+                that.logger.debug(xHttp.responseText);
                 let receiver = JSON.parse(xHttp.responseText);
                 that.receiverId = receiver.id;
                 that.changeReceiverIdHandler(that.receiverId);
                 that.connectToWebSocket();
+                that.loadVideos();
             }
         };
         xHttp.open('POST', url, true);
@@ -54,6 +71,7 @@ class App {
     }
 
     updateReceiver() {
+        this.logger.debug("updateReceiver - receiverId: + " + this.receiverId);
         const xHttp = new XMLHttpRequest();
         const receiverControllerPath = '/api/v1/receivers/' + this.receiverId;
         const url = this.apiUrl + receiverControllerPath;
@@ -66,11 +84,12 @@ class App {
                 return;
             }
             if (this.status === 200) {
-                console.log(xHttp.responseText);
+                that.logger.debug(xHttp.responseText);
                 that.connectToWebSocket();
                 that.loadVideos();
             }
             else if ([400,404].includes(this.status)){
+                that.logger.debug(xHttp.responseText);
                 that.receiverId = null;
                 that.changeReceiverIdHandler(that.receiverId);
                 that.createReceiver();
@@ -79,5 +98,22 @@ class App {
         xHttp.open('PATCH', url, true);
         xHttp.setRequestHeader('Content-type', 'application/json');
         xHttp.send(JSON.stringify(receiverInfo));
+    }
+
+    loadVideos() {
+        this.logger.debug("loadVideos - receiverId: + " + this.receiverId);
+        const xHttp = new XMLHttpRequest();
+        const receiverControllerPath = "/api/v1/videos";
+        const url = this.apiUrl + receiverControllerPath;
+        let that = this;
+        xHttp.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                that.logger.debug(xHttp.responseText);
+                const response = JSON.parse(xHttp.responseText);
+                that.multiPlayer.setVideos(response.list);
+            }
+        };
+        xHttp.open("GET", url, true);
+        xHttp.send();
     }
 }

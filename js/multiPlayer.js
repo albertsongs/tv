@@ -67,6 +67,7 @@ class MultiPlayer {
             "&list=%playlistId%&listType=playlist&loop=1&color=white";
         this.videoPlayer.style.setProperty('display', 'none');
         this.iframePlayer.style.setProperty('display', 'block');
+        this.videoPlayer.pause();
         this.iframePlayer.src = youtubeLinkPattern
             .replace('%videoId%', videoInfo.youtube.videoId)
             .replace('%playlistId%', videoInfo.youtube.playlistId);

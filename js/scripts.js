@@ -32,6 +32,7 @@ window.onkeydown = (e) => {
             multiPlayer.nextTrack();
             break;
         case 'MediaPlayPause':
+        case 'Unidentified':
             multiPlayer.playPause();
             break;
         case 'ArrowUp':

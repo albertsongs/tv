@@ -9,6 +9,7 @@ class MultiPlayer {
         this.changePlayerVolumeHandler = changePlayerVolumeHandler;
         this.videoIndex = 0;
         this.videoPlayer.onended = () => this.nextTrack();
+        this.showSubtitles();
     }
     handleCommand(command) {
         switch (command.type) {
@@ -78,6 +79,7 @@ class MultiPlayer {
                 "<track id='subtitles' label='Russian' kind='subtitles' srclang='ru' " +
                 "src='%source%' default>"
             this.videoPlayer.innerHTML = trackPattern.replace('%source%', videoInfo.subtitlesUrl);
+            this.showSubtitles();
         }
         this.videoPlayer.src = videoInfo.url;
         this.iframePlayer.style.setProperty('display', 'none');
@@ -96,5 +98,8 @@ class MultiPlayer {
             return (this.videoIndex + 1) % this.videosCount;
         }
         return this.videoIndexes[videoInfo.id];
+    }
+    showSubtitles(){
+        this.videoPlayer.textTracks.getTrackById("subtitles").mode = "showing";
     }
 }

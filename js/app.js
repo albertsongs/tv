@@ -19,6 +19,7 @@ class App {
             this.logger.debug("command is not defined");
             return;
         }
+        this.logger.debug(JSON.stringify(command.payload));
         this.multiPlayer.handleCommand(command);
     }
 

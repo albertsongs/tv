@@ -20,11 +20,10 @@ class MultiPlayer {
                 this.loadRawVideo(command.payload);
                 this.videoIndex = this.getVideoIndex(command.payload);
                 break;
-            case 'PLAY':
-                this.videoPlayer.play();
-                break;
-            case 'PAUSE':
-                this.videoPlayer.pause();
+            case 'PLAY_PAUSE':
+                this.videoPlayer.paused
+                    ? this.videoPlayer.play()
+                    : this.videoPlayer.pause()
                 break;
             case 'NEXT':
                 this.nextTrack();

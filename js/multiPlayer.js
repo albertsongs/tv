@@ -5,7 +5,7 @@ class MultiPlayer {
     constructor(videoPlayer, iframePlayer, initVolume, changePlayerVolumeHandler) {
         this.videoPlayer = videoPlayer;
         this.iframePlayer = iframePlayer;
-        this.volume = initVolume;
+        this.videoPlayer.volume = this.volume = initVolume;
         this.changePlayerVolumeHandler = changePlayerVolumeHandler;
         this.videoIndex = 0;
         this.videoPlayer.onended = () => this.nextTrack();

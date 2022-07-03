@@ -37,7 +37,10 @@ class App {
                 status: "JOIN"
             };
             stompClient.send('/app/message', {}, JSON.stringify(message));
-        }, (err) => this.logger.debug(err));
+        }, (err) => {
+            this.logger.debug(err);
+            setTimeout(() => this.connectToWebSocket(), 30000);
+        });
     }
 
     registerReceiver() {

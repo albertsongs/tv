@@ -9,7 +9,8 @@ window.onresize = correctVideoPlayerHeight;
 correctVideoPlayerHeight();
 
 let logger = new Logger(document.getElementById('appLog'));
-window.onerror = (err) => logger.debug(err); //for debug on TV
+window.onerror = (err) => logger.debug(JSON.stringify(err)); //for debug on TV
+window.onkeydown = (e) => logger.debug(JSON.stringify({key:e.key}));
 let apiUrl = 'https://albertsongs.asuscomm.com';
 let receiverId = localStorage.getItem('receiverId');
 let changeReceiverIdHandler = (receiverId) => localStorage.setItem('receiverId', receiverId);

@@ -39,7 +39,10 @@ window.onkeydown = (e) => {
         case 'ArrowDown':
             break;
         default:
-            logger.debug(e.key);
+            logger.debug(JSON.stringify({
+                key: e.key,
+                keyCode: e.keyCode
+            }));
     }
 };
 

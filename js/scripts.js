@@ -17,7 +17,7 @@ let changePlayerVolumeHandler = (volume) => localStorage.setItem('volume', volum
 let multiPlayer = new MultiPlayer(
     document.getElementById('player'),
     document.getElementById('iframePlayer'),
-    localStorage.getItem('volume'),
+    localStorage.getItem('volume') || 1,
     changePlayerVolumeHandler
 )
 

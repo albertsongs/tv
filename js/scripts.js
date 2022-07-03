@@ -22,18 +22,20 @@ let multiPlayer = new MultiPlayer(
 )
 
 window.onkeydown = (e) => {
-    logger.debug(e.key);
     switch (e.key) {
         case 'ArrowLeft':
         case 'MediaPlayPausePrevious':
-            multiPlayer.handleCommand('PREVIOUS');
+            multiPlayer.previousTrack();
             break;
         case 'ArrowRight':
         case 'MediaPlayPauseNext':
-            multiPlayer.handleCommand('NEXT');
+            multiPlayer.nextTrack();
             break;
         case 'MediaPlayPause':
-            multiPlayer.handleCommand('PLAY_PAUSE');
+            multiPlayer.playPause();
+            break;
+        case 'ArrowUp':
+        case 'ArrowDown':
             break;
         default:
             logger.debug(e.key);

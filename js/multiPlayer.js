@@ -12,7 +12,7 @@ class MultiPlayer {
         this.showSubtitles();
     }
     handleCommand(command) {
-        switch (command.type) {
+        switch (command) {
             case 'PLAY_YOUTUBE_VIDEO':
                 this.loadYoutubeVideo(command.payload);
                 break;
@@ -21,9 +21,7 @@ class MultiPlayer {
                 this.videoIndex = this.getVideoIndex(command.payload);
                 break;
             case 'PLAY_PAUSE':
-                this.videoPlayer.paused
-                    ? this.videoPlayer.play()
-                    : this.videoPlayer.pause()
+                this.playPause();
                 break;
             case 'NEXT':
                 this.nextTrack();
@@ -83,6 +81,11 @@ class MultiPlayer {
         this.videoPlayer.src = videoInfo.url;
         this.iframePlayer.style.setProperty('display', 'none');
         this.videoPlayer.style.setProperty('display', 'block');
+    }
+    playPause() {
+        this.videoPlayer.paused
+            ? this.videoPlayer.play()
+            : this.videoPlayer.pause();
     }
     nextTrack() {
         this.videoIndex = (this.videoIndex + 1) % this.videosCount;

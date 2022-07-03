@@ -19,7 +19,7 @@ class App {
             this.logger.debug("command is not defined");
             return;
         }
-        this.multiPlayer.handleCommand(command.type);
+        this.multiPlayer.handleCommand(command);
     }
 
     connectToWebSocket() {

@@ -12,7 +12,7 @@ class MultiPlayer {
         this.showSubtitles();
     }
     handleCommand(command) {
-        switch (command) {
+        switch (command.type) {
             case 'PLAY_YOUTUBE_VIDEO':
                 this.loadYoutubeVideo(command.payload);
                 break;

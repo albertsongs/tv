@@ -92,7 +92,9 @@ class MultiPlayer {
         this.loadRawVideo(this.videos[this.videoIndex]);
     }
     previousTrack() {
-        this.videoIndex = (this.videoIndex - 1) % this.videosCount;
+        this.videoIndex = this.videoIndex === 0
+            ? this.videosCount - 1
+            : (this.videoIndex - 1) % this.videosCount;
         this.loadRawVideo(this.videos[this.videoIndex]);
     }
     getVideoIndex(videoInfo) {

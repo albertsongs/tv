@@ -2,9 +2,10 @@
  * @albertsongs (https://github.com/albertsongs)
  */
 class MultiPlayer {
-    constructor(videoPlayer, iframePlayer, initVolume, changePlayerVolumeHandler) {
+    constructor(videoPlayer, iframePlayer, qrCode, initVolume, changePlayerVolumeHandler) {
         this.videoPlayer = videoPlayer;
         this.iframePlayer = iframePlayer;
+        this.qrCode = qrCode;
         this.videoPlayer.volume = this.volume = initVolume;
         this.changePlayerVolumeHandler = changePlayerVolumeHandler;
         this.videoIndex = 0;
@@ -105,5 +106,17 @@ class MultiPlayer {
     }
     showSubtitles(){
         this.videoPlayer.textTracks.getTrackById("subtitles").mode = "showing";
+    }
+    buildConnectQR(receiverId) {
+        let connectUrl = "https://albertsongs.github.io/rc?receiverId=" + receiverId;
+        this.qrCode.innerHTML = "";
+        new QRCode(this.qrCode, connectUrl);
+    }
+    toggleQrCodeVisibility() {
+        let cssPropertyOpacity = 'opacity';
+        let qrElemOpacity = this.qrCode.style.getPropertyValue(cssPropertyOpacity);
+        qrElemOpacity = parseFloat(qrElemOpacity) < 1 ? '1' : '0';
+        this.qrCode.style.setProperty(cssPropertyOpacity, qrElemOpacity);
+        this.qrCode.style.setProperty('animation', 'none');
     }
 }

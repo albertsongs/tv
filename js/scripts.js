@@ -50,8 +50,3 @@ window.onkeydown = (e) => {
             }));
     }
 };
-
-document.onload = function () {
-    let app = new App(apiUrl, receiverId, multiPlayer, changeReceiverIdHandler, logger);
-    app.registerReceiver();
-}

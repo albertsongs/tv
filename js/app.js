@@ -2,12 +2,15 @@
  * @albertsongs (https://github.com/albertsongs)
  */
 class App {
+    RESPOND_TIME_INTERVAL = 15000; // 15 sec
+
     constructor(apiUrl, receiverId, multiPlayer, changeReceiverIdHandler, logger) {
         this.apiUrl = apiUrl;
         this.receiverId = receiverId;
         this.multiPlayer = multiPlayer;
         this.changeReceiverIdHandler = changeReceiverIdHandler;
         this.logger = logger;
+        this.initWebSocks();
     }
 
     messageHandler(mess) {
@@ -23,23 +26,45 @@ class App {
         this.multiPlayer.handleCommand(command);
     }
 
+    respond() {
+        const message = {
+            senderName: receiverId,
+            status: "MESSAGE",
+            date: new Date().getTime().toString(),
+            message: "RESPOND"
+        };
+        this.stompClient.send('/app/message', {}, JSON.stringify(message));
+        if(this.needDoRespond){
+            setTimeout(() => this.respond(), this.RESPOND_TIME_INTERVAL);
+        }
+    }
+
+    initWebSocks() {
+        let sock = new SockJS(this.apiUrl + '/ws');
+        this.stompClient = Stomp.over(sock);
+    }
+
     connectToWebSocket() {
         this.logger.debug("connectToWebSocket - receiverId: + " + this.receiverId);
         const receiverId = this.receiverId;
         const CHANEL_PATTERN = '/user/%userId%/private';
-        let sock = new SockJS(this.apiUrl + '/ws');
-        let stompClient = Stomp.over(sock);
         let receiverChanel = CHANEL_PATTERN.replace('%userId%', receiverId);
-        stompClient.connect({user: receiverId}, () => {
-            stompClient.subscribe(receiverChanel, (mess) => this.messageHandler(mess));
+        this.stompClient.connect({user: receiverId}, () => {
+            this.stompClient.subscribe(receiverChanel, (mess) => this.messageHandler(mess));
             const message = {
                 senderName: receiverId,
                 status: "JOIN"
             };
-            stompClient.send('/app/message', {}, JSON.stringify(message));
+            this.stompClient.send('/app/message', {}, JSON.stringify(message));
+            this.multiPlayer.buildConnectQR(this.receiverId);
+            this.needDoRespond = true;
+            this.respond();
         }, (err) => {
             this.logger.debug(err);
-            setTimeout(() => this.connectToWebSocket(), 30000);
+            const RECONNECT_TIME_INTERVAL = 30000; // 30 sec
+            this.needDoRespond = false;
+            this.initWebSocks();
+            setTimeout(() => this.connectToWebSocket(), RECONNECT_TIME_INTERVAL);
         });
     }
 

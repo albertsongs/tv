@@ -17,6 +17,7 @@ let changePlayerVolumeHandler = (volume) => localStorage.setItem('volume', volum
 let multiPlayer = new MultiPlayer(
     document.getElementById('player'),
     document.getElementById('iframePlayer'),
+    document.getElementById('qrcode'),
     localStorage.getItem('volume') || 1,
     changePlayerVolumeHandler
 )
@@ -37,6 +38,10 @@ window.onkeydown = (e) => {
             break;
         case 'ArrowUp':
         case 'ArrowDown':
+            break;
+        case 'Info':
+        case 'F2':
+            multiPlayer.toggleQrCodeVisibility();
             break;
         default:
             logger.debug(JSON.stringify({

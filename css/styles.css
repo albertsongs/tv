@@ -22,3 +22,18 @@ video#player {
 #appLog {
     color: white;
 }
+
+#qrcode {
+    position: absolute;
+    right: 64px;
+    top: 64px;
+    opacity: 0;
+    animation: qrAnimation 15s 1 alternate linear;
+}
+
+@keyframes qrAnimation {
+    from {opacity: 0}
+    40% {opacity: 1}
+    85% {opacity: 1}
+    to {opacity: 0}
+}

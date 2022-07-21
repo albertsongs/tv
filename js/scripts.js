@@ -51,5 +51,7 @@ window.onkeydown = (e) => {
     }
 };
 
-let app = new App(apiUrl, receiverId, multiPlayer, changeReceiverIdHandler, logger);
-app.registerReceiver();
+document.onload = function () {
+    let app = new App(apiUrl, receiverId, multiPlayer, changeReceiverIdHandler, logger);
+    app.registerReceiver();
+}

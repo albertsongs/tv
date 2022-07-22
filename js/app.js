@@ -2,8 +2,6 @@
  * @albertsongs (https://github.com/albertsongs)
  */
 class App {
-    RESPOND_TIME_INTERVAL = 15000; // 15 sec
-
     constructor(apiUrl, receiverId, multiPlayer, changeReceiverIdHandler, logger) {
         this.apiUrl = apiUrl;
         this.receiverId = receiverId;
@@ -34,8 +32,9 @@ class App {
             message: "RESPOND"
         };
         this.stompClient.send('/app/message', {}, JSON.stringify(message));
+        const RESPOND_TIME_INTERVAL = 15000; // 15 sec
         if(this.needDoRespond){
-            setTimeout(() => this.respond(), this.RESPOND_TIME_INTERVAL);
+            setTimeout(() => this.respond(), RESPOND_TIME_INTERVAL);
         }
     }
 

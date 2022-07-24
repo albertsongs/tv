@@ -53,31 +53,31 @@ window.onkeydown = (e) => {
             multiPlayer.toggleQrCodeVisibility();
             break;
         case '1':
-            multiPlayer.loadRawVideoById(0);
+            multiPlayer.loadRawVideoByIndex(0);
             break;
         case '2':
-            multiPlayer.loadRawVideoById(1);
+            multiPlayer.loadRawVideoByIndex(1);
             break;
         case '3':
-            multiPlayer.loadRawVideoById(2);
+            multiPlayer.loadRawVideoByIndex(2);
             break;
         case '4':
-            multiPlayer.loadRawVideoById(3);
+            multiPlayer.loadRawVideoByIndex(3);
             break;
         case '5':
-            multiPlayer.loadRawVideoById(4);
+            multiPlayer.loadRawVideoByIndex(4);
             break;
         case '6':
-            multiPlayer.loadRawVideoById(5);
+            multiPlayer.loadRawVideoByIndex(5);
             break;
         case '7':
-            multiPlayer.loadRawVideoById(6);
+            multiPlayer.loadRawVideoByIndex(6);
             break;
         case '8':
-            multiPlayer.loadRawVideoById(7);
+            multiPlayer.loadRawVideoByIndex(7);
             break;
         case '9':
-            multiPlayer.loadRawVideoById(8);
+            multiPlayer.loadRawVideoByIndex(8);
             break;
         default:
             logger.debug(JSON.stringify({

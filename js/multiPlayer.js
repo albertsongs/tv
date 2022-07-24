@@ -131,7 +131,7 @@ class MultiPlayer {
         this.videoPlayer.textTracks.getTrackById("subtitles").mode = "showing";
     }
     buildConnectQR(receiverId) {
-        let connectUrl = "https://albertsongs.github.io/rc?receiverId=" + receiverId;
+        let connectUrl = location.protocol + "//" + location.host + "/rc?receiverId="  + receiverId;
         this.qrCode.innerHTML = "";
         new QRCode(this.qrCode, connectUrl);
     }

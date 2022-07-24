@@ -129,7 +129,7 @@ class App {
     }
 
     loadVideos() {
-        this.logger.debug("loadVideos - receiverId: + " + this.receiverId);
+        this.logger.debug("loadVideos");
         const xHttp = new XMLHttpRequest();
         const receiverControllerPath = "/api/v1/videos";
         const url = this.apiUrl + receiverControllerPath;

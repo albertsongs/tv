@@ -83,6 +83,12 @@ class MultiPlayer {
         this.iframePlayer.style.setProperty('display', 'none');
         this.videoPlayer.style.setProperty('display', 'block');
     }
+    loadRawVideoById(id) {
+        if(this.videos === undefined || this.videos.length < id + 1) {
+            return;
+        }
+        this.loadRawVideo(this.videos[id]);
+    }
     playPause() {
         this.videoPlayer.paused
             ? this.videoPlayer.play()
@@ -90,13 +96,13 @@ class MultiPlayer {
     }
     nextTrack() {
         this.videoIndex = (this.videoIndex + 1) % this.videosCount;
-        this.loadRawVideo(this.videos[this.videoIndex]);
+        this.loadRawVideoById(this.videoIndex);
     }
     previousTrack() {
         this.videoIndex = this.videoIndex === 0
             ? this.videosCount - 1
             : (this.videoIndex - 1) % this.videosCount;
-        this.loadRawVideo(this.videos[this.videoIndex]);
+        this.loadRawVideoById(this.videoIndex);
     }
     getVideoIndex(videoInfo) {
         if (videoInfo.id === null) {

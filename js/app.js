@@ -44,7 +44,7 @@ class App {
     }
 
     connectToWebSocket() {
-        this.logger.debug("connectToWebSocket - receiverId: + " + this.receiverId);
+        this.logger.debug("connectToWebSocket - receiverId: " + this.receiverId);
         const receiverId = this.receiverId;
         const CHANEL_PATTERN = '/user/%userId%/private';
         let receiverChanel = CHANEL_PATTERN.replace('%userId%', receiverId);
@@ -68,14 +68,14 @@ class App {
     }
 
     registerReceiver() {
-        this.logger.debug("registerReceiver - receiverId: + " + this.receiverId);
+        this.logger.debug("receiverId: " + this.receiverId);
         this.receiverId == null
             ? this.createReceiver()
             : this.updateReceiver();
     }
 
     createReceiver() {
-        this.logger.debug("createReceiver - receiverId: + " + this.receiverId);
+        this.logger.debug("createReceiver");
         const xHttp = new XMLHttpRequest();
         const receiverControllerPath = '/api/v1/receivers';
         const url = this.apiUrl + receiverControllerPath;
@@ -99,7 +99,7 @@ class App {
     }
 
     updateReceiver() {
-        this.logger.debug("updateReceiver - receiverId: + " + this.receiverId);
+        this.logger.debug("updateReceiver");
         const xHttp = new XMLHttpRequest();
         const receiverControllerPath = '/api/v1/receivers/' + this.receiverId;
         const url = this.apiUrl + receiverControllerPath;

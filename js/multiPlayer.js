@@ -11,6 +11,10 @@ class MultiPlayer {
         this.videoIndex = 0;
         this.videoPlayer.onended = () => this.nextTrack();
         this.showSubtitles();
+        this.hls = new Hls();
+        this.hls.on(Hls.Events.MANIFEST_PARSED,function() {
+            this.videoPlayer.play();
+        });
     }
     handleCommand(command) {
         switch (command.type) {
@@ -52,7 +56,6 @@ class MultiPlayer {
         this.videos = videos;
         this.videosCount = this.videos.length;
         this.setVideoIndexes();
-        this.loadRawVideo(videos[0]);
     }
     setVideoIndexes(){
         this.videoIndexes = [];
@@ -71,7 +74,21 @@ class MultiPlayer {
             .replace('%videoId%', videoInfo.youtube.videoId)
             .replace('%playlistId%', videoInfo.youtube.playlistId);
     }
+    loadHlsVideoStream(videoInfo){
+        if(!Hls.isSupported()) {
+            return;
+        }
+        this.iframePlayer.style.setProperty('display', 'none');
+        this.videoPlayer.style.setProperty('display', 'block');
+        this.videoPlayer.innerHTML = "";
+        this.hls.loadSource(videoInfo.url);
+        this.hls.attachMedia(this.videoPlayer);
+    }
     loadRawVideo(videoInfo) {
+        if (videoInfo.url.match(/.m3u8/) !== null) {
+            return this.loadHlsVideoStream(videoInfo);
+        }
+        this.hls.stopLoad();
         if (videoInfo.subtitlesUrl !== null) {
             const trackPattern = "" +
                 "<track id='subtitles' label='Russian' kind='subtitles' srclang='ru' " +
@@ -83,6 +100,12 @@ class MultiPlayer {
         this.iframePlayer.style.setProperty('display', 'none');
         this.videoPlayer.style.setProperty('display', 'block');
     }
+    loadRawVideoByIndex(index) {
+        if(this.videos === undefined || this.videos.length < index + 1) {
+            return;
+        }
+        this.loadRawVideo(this.videos[index]);
+    }
     playPause() {
         this.videoPlayer.paused
             ? this.videoPlayer.play()
@@ -90,13 +113,13 @@ class MultiPlayer {
     }
     nextTrack() {
         this.videoIndex = (this.videoIndex + 1) % this.videosCount;
-        this.loadRawVideo(this.videos[this.videoIndex]);
+        this.loadRawVideoByIndex(this.videoIndex);
     }
     previousTrack() {
         this.videoIndex = this.videoIndex === 0
             ? this.videosCount - 1
             : (this.videoIndex - 1) % this.videosCount;
-        this.loadRawVideo(this.videos[this.videoIndex]);
+        this.loadRawVideoByIndex(this.videoIndex);
     }
     getVideoIndex(videoInfo) {
         if (videoInfo.id === null) {
@@ -108,7 +131,7 @@ class MultiPlayer {
         this.videoPlayer.textTracks.getTrackById("subtitles").mode = "showing";
     }
     buildConnectQR(receiverId) {
-        let connectUrl = "https://albertsongs.github.io/rc?receiverId=" + receiverId;
+        let connectUrl = location.protocol + "//" + location.host + "/rc?receiverId="  + receiverId;
         this.qrCode.innerHTML = "";
         new QRCode(this.qrCode, connectUrl);
     }
